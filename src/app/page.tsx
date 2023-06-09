@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import { type NextPage } from "next";
 import Head from "next/head";
@@ -32,26 +29,27 @@ const Home: NextPage = () => {
     };
     void getTiktoks(search);
   }, [search]);
-
+  function isString(value: unknown): value is string {
+    return typeof value === "string";
+  }
   useEffect(() => {
     if (Object.keys(videos.id).length == 0) return;
     const lst = Object.keys(videos.id);
     const items: { file: string; name: string; text: string }[] = [];
 
     lst.forEach((element: string) => {
+      if (element === "undefined") return;
       items.push({
-        file: videos?.id[element].replace(".json", ".mp4"),
-
-        name: videos.title[element]?.replace(" on TikTok", ""),
+        file: videos.id[element]?.replace(".json", ".mp4") as string,
+        name: videos.title[element]?.replace(" on TikTok", "") as string,
         text:
-          videos.text[element]?.indexOf("#") > -1
-            ? videos.text[element]?.slice(0, videos.text[element]?.indexOf("#"))
-            : videos.text[element],
+          (videos.text[element]?.indexOf("#") as number) > -1
+            ? (videos.text[element]?.slice(
+                0,
+                videos.text[element]?.indexOf("#")
+              ) as string)
+            : (videos.text[element] as string),
       });
-      console.log(
-        "https://d1eiph32earw5w.cloudfront.net/videos/" +
-          videos?.id[element].replace(".json", ".mp4")
-      );
     });
     setItems(items);
   }, [videos]);
