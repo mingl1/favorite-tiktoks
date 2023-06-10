@@ -5,13 +5,15 @@ import Search from "./search";
 import React, { useEffect } from "react";
 import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
+
+type Video = {
+  id: { [key: string]: string };
+  title: { [key: string]: string };
+  text: { [key: string]: string };
+};
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
-  const [videos, setVideos] = React.useState<{
-    id: { [key: string]: string };
-    title: { [key: string]: string };
-    text: { [key: string]: string };
-  }>({
+  const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
     text: {},
@@ -22,16 +24,13 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (search === "") return;
     const getTiktoks = async (state: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const res = await fetch(`/api/tt/${state}`).then((res) => res.json());
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      const res: Video = (await fetch(`/api/tt/${state}`).then((res) =>
+        res.json()
+      )) as Video;
       setVideos(res);
     };
     void getTiktoks(search);
   }, [search]);
-  function isString(value: unknown): value is string {
-    return typeof value === "string";
-  }
   useEffect(() => {
     if (Object.keys(videos.id).length == 0) return;
     const lst = Object.keys(videos.id);
@@ -92,7 +91,9 @@ const Home: NextPage = () => {
                             height="100%"
                           />
                         </div>
-                        <div className="text-lg">{item.text}</div>
+                        <div className="text-lg">
+                          <p className="w-full overflow-hidden">{item.text}</p>
+                        </div>
                       </div>
                     ))
                   : null}
