@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
-// import { useSearchFieldState } from "react-stately";
-import { AriaSearchFieldProps, useSearchField } from "react-aria";
-// import { SearchFieldAria } from "react-aria";
+import { useSearchField } from "react-aria";
 import React from "react";
-
+import type { AriaSearchFieldProps } from "react-aria";
 export default function SearchField(props: AriaSearchFieldProps) {
   const { label } = props;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [state, setState] = React.useState("");
-  const s = { value: state, setValue: setState };
   const ref = React.useRef(null);
-  const { labelProps, inputProps } = useSearchField(props, s, ref);
+  const { labelProps, inputProps } = useSearchField(
+    props,
+    { value: state, setValue: setState },
+    ref
+  );
 
   return (
     <div
