@@ -11,7 +11,7 @@ export default function RootLayout({
         <title>TikTok Favorites</title>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>
+      <body className="bg-[#15162c]">
         {children}
         <Analytics />
       </body>

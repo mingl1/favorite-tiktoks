@@ -13,6 +13,7 @@ type Video = {
 };
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
+  const [limit, setLimit] = React.useState(3);
   const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
@@ -23,14 +24,14 @@ const Home: NextPage = () => {
   >([]);
   useEffect(() => {
     if (search === "") return;
-    const getTiktoks = async (state: string) => {
-      const res: Video = (await fetch(`/api/tt/${state}`).then((res) =>
+    const getTiktoks = async (state: string, lim: number) => {
+      const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then((res) =>
         res.json()
       )) as Video;
       setVideos(res);
     };
-    void getTiktoks(search);
-  }, [search]);
+    void getTiktoks(search, limit);
+  }, [search, limit]);
   useEffect(() => {
     if (Object.keys(videos.id).length == 0) return;
     const lst = Object.keys(videos.id);
@@ -69,7 +70,16 @@ const Home: NextPage = () => {
             <span className="grad2">Favorites</span>
           </h1>
           <div className="flex-col justify-center align-middle">
-            <Search label="Search" onSubmit={(e) => setSearch(e)} />
+            <div className="flex justify-center gap-4">
+              <Search label="Search" onSubmit={(e) => setSearch(e)} />
+              <div className="float-left w-24">
+                <Search
+                  label="Limit"
+                  onSubmit={(e) => setLimit(Number(e))}
+                  defaultValue="3"
+                />
+              </div>
+            </div>
             <div className="flex w-full">
               <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:gap-16">
                 {items.length > 0

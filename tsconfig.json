@@ -40,7 +40,7 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-, "src/app/api/tt/[search]/route.js"  ],
+, "src/app/api/tt/[search]/[n]/route.js"  ],
   "exclude": [
     "node_modules"
   ]
