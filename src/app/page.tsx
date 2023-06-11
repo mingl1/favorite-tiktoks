@@ -70,9 +70,11 @@ const Home: NextPage = () => {
             <span className="grad2">Favorites</span>
           </h1>
           <div className="flex-col justify-center align-middle">
-            <div className="flex justify-center gap-4">
-              <Search label="Search" onSubmit={(e) => setSearch(e)} />
-              <div className="float-left w-24">
+            <div className="flex justify-center md:flex-row md:gap-4">
+              <div className="mr-4 max-w-[45vw] flex-1 md:mr-0 md:flex-none">
+                <Search label="Search" onSubmit={(e) => setSearch(e)} />
+              </div>
+              <div className="float-left max-w-[35vw] flex-1 md:w-24 md:flex-none">
                 <Search
                   label="Limit"
                   onSubmit={(e) => setLimit(Number(e))}
@@ -81,7 +83,7 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="flex w-full">
-              <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:gap-16">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
                 {items.length > 0
                   ? items.map((item) => (
                       <div

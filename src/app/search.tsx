@@ -16,7 +16,7 @@ export default function SearchField(props: AriaSearchFieldProps) {
   return (
     <div
       // style={{ display: "flex", flexDirection: "column", width: 200 }}
-      className="mb-12 flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 tracking-widest text-zinc-700"
+      className="mb-4 flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 tracking-widest text-zinc-700 md:mb-12"
     >
       <label className="text-xl font-bold text-slate-50" {...labelProps}>
         {label}
