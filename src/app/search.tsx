@@ -2,11 +2,16 @@
 import { useSearchField } from "react-aria";
 import React from "react";
 import type { AriaSearchFieldProps } from "react-aria";
-export default function SearchField(props: AriaSearchFieldProps) {
-  const { label, defaultValue } = props;
+interface myProps extends AriaSearchFieldProps {
+  state: string;
+  setState: React.Dispatch<React.SetStateAction<string>>;
+}
+export default function SearchField(props: myProps) {
+  const { label, defaultValue, state, setState } = props;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const [state, setState] = React.useState("");
+  // const [state, setState] = React.useState("");
   const ref = React.useRef(null);
+
   const { labelProps, inputProps } = useSearchField(
     props,
     { value: state, setValue: setState },

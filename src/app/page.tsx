@@ -5,15 +5,18 @@ import Search from "./search";
 import React, { useEffect } from "react";
 import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
-
+import getSkeletons from "./skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 type Video = {
   id: { [key: string]: string };
   title: { [key: string]: string };
   text: { [key: string]: string };
 };
+let timer: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState(3);
+  const [submit, setSubmit] = React.useState(false);
   const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
@@ -23,15 +26,21 @@ const Home: NextPage = () => {
     { file: string; name: string; text: string }[]
   >([]);
   useEffect(() => {
-    if (search === "") return;
-    const getTiktoks = async (state: string, lim: number) => {
-      const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then((res) =>
-        res.json()
-      )) as Video;
-      setVideos(res);
-    };
-    void getTiktoks(search, limit);
-  }, [search, limit]);
+    if (timer) clearTimeout(timer);
+    if (search === "" || !submit) return;
+    timer = setTimeout(() => {
+      console.log("fetching");
+      setVideos({ title: {}, id: {}, text: {} });
+      const getTiktoks = async (state: string, lim: number) => {
+        const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then((res) =>
+          res.json()
+        )) as Video;
+        setVideos(res);
+      };
+      void getTiktoks(search, limit);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search, limit, submit]);
   useEffect(() => {
     if (Object.keys(videos.id).length == 0) return;
     const lst = Object.keys(videos.id);
@@ -53,6 +62,7 @@ const Home: NextPage = () => {
     });
     setItems(items);
   }, [videos]);
+
   return (
     <SSRProvider>
       <Head>
@@ -72,19 +82,32 @@ const Home: NextPage = () => {
           <div className="flex-col justify-center align-middle">
             <div className="flex justify-center md:flex-row md:gap-4">
               <div className="mr-4 max-w-[45vw] flex-1 md:mr-0 md:flex-none">
-                <Search label="Search" onSubmit={(e) => setSearch(e)} />
+                <Search
+                  label="Search"
+                  onSubmit={(e) => {
+                    setSubmit((e) => true);
+                    setSearch(e);
+                  }}
+                  state={search}
+                  setState={setSearch}
+                />
               </div>
               <div className="float-left max-w-[35vw] flex-1 md:w-24 md:flex-none">
                 <Search
                   label="Limit"
-                  onSubmit={(e) => setLimit(Number(e))}
+                  onSubmit={(e) => {
+                    setSubmit((e) => true);
+                    setLimit(Number(e));
+                  }}
                   defaultValue="3"
+                  state={limit.toString()}
+                  setState={setLimit}
                 />
               </div>
             </div>
             <div className="flex w-full">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
-                {items.length > 0
+                {items.length > 0 && items[0] && items[0].file
                   ? items.map((item) => (
                       <div
                         key={item.file}
@@ -108,6 +131,8 @@ const Home: NextPage = () => {
                         </div>
                       </div>
                     ))
+                  : items.length > 0
+                  ? getSkeletons(limit)
                   : null}
               </div>
             </div>
