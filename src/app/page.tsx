@@ -15,7 +15,7 @@ type Video = {
 let timer: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
-  const [limit, setLimit] = React.useState(3);
+  const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
   const [videos, setVideos] = React.useState<Video>({
     title: {},
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         )) as Video;
         setVideos(res);
       };
-      void getTiktoks(search, limit);
+      void getTiktoks(search, Number(limit));
     }, 500);
     return () => clearTimeout(timer);
   }, [search, limit, submit]);
@@ -97,7 +97,7 @@ const Home: NextPage = () => {
                   label="Limit"
                   onSubmit={(e) => {
                     setSubmit((e) => true);
-                    setLimit(Number(e));
+                    setItems([{ file: "", name: "", text: "" }]);
                   }}
                   defaultValue="3"
                   state={limit.toString()}
@@ -107,7 +107,7 @@ const Home: NextPage = () => {
             </div>
             <div className="flex w-full">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
-                {items.length > 0 && items[0] && items[0].file
+                {items.length > 0 && items[0] && items[0].file !== ""
                   ? items.map((item) => (
                       <div
                         key={item.file}
@@ -131,8 +131,8 @@ const Home: NextPage = () => {
                         </div>
                       </div>
                     ))
-                  : items.length > 0
-                  ? getSkeletons(limit)
+                  : items.length > 0 && items[0] && items[0].file === ""
+                  ? getSkeletons(Number(limit))
                   : null}
               </div>
             </div>
