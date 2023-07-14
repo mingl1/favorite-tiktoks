@@ -29,7 +29,7 @@ const Home: NextPage = () => {
     if (timer) clearTimeout(timer);
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
-      console.log("fetching");
+      // console.log("fetching");
       setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async (state: string, lim: number) => {
         const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then((res) =>
@@ -42,7 +42,9 @@ const Home: NextPage = () => {
     return () => clearTimeout(timer);
   }, [search, limit, submit]);
   useEffect(() => {
-    if (Object.keys(videos.id).length == 0) return;
+    if (Object.keys(videos.id).length == 0) {
+      return;
+    }
     const lst = Object.keys(videos.id);
     const items: { file: string; name: string; text: string }[] = [];
 
@@ -131,7 +133,7 @@ const Home: NextPage = () => {
                         </div>
                       </div>
                     ))
-                  : items.length > 0 && items[0] && items[0].file === ""
+                  : submit && items.length === 0
                   ? getSkeletons(Number(limit))
                   : null}
               </div>
