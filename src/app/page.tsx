@@ -22,6 +22,15 @@ const Home: NextPage = () => {
     id: {},
     text: {},
   });
+  //startup the serverless functiono so it doesn't have to wait
+  useEffect(() => {
+    const getTiktoks = async (state: string, lim: number) => {
+      const res: Video = (await fetch(`/api/tt/a/0`).then((res) =>
+        res.json()
+      )) as Video;
+    };
+    void getTiktoks(search, Number(limit));
+  }, []);
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
   >([]);
