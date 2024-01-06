@@ -4,7 +4,6 @@ import {
   SageMakerRuntimeClient,
   InvokeEndpointCommand,
 } from "@aws-sdk/client-sagemaker-runtime";
-import retry from "async/retry";
 
 /**
  * @param {any} _request
