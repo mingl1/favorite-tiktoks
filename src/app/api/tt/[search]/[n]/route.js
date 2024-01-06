@@ -30,19 +30,26 @@ export async function GET(_request, { params }) {
     // EnableExplanations: "STRING_VALUE",
   };
   const command = new InvokeEndpointCommand(input);
-  const response = await client.send(command).then((res)=>{
-    const x = Uint8Array.from(res.Body);
-    var string = new TextDecoder().decode(x);
-    const b = JSON.parse(string);
-    const v = JSON.parse(b)
-    return NextResponse.json(v);
-  }).catch((err)=> new NextResponse(err.Body))
-  
-  return response
-  
+  const response = await client
+    .send(command)
+    .then((res) => {
+      const x = Uint8Array.from(res.Body);
+      var string = new TextDecoder().decode(x);
+      const b = JSON.parse(string);
+      const v = JSON.parse(b);
+      return NextResponse.json(v);
+    })
+    .catch((err) => {
+      console.log(err);
+      const x = Uint8Array.from(err.Body);
+      return new NextResponse(x);
+    });
+
+  return response;
+
   // while (string.startsWith
   // try {
-    
+
   // }
   // catch (error){
   //   const response2 = await client.send(command);
@@ -51,7 +58,7 @@ export async function GET(_request, { params }) {
   //   const b2 = JSON.parse(string2);
   //   return NextResponse.json(JSON.parse(b2));
   // }
-  
+
   // } catch (err) {
   //   return new NextResponse(err);
   // }

@@ -7,6 +7,7 @@ import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
 import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { set } from "zod";
 type Video = {
   id: { [key: string]: string };
   title: { [key: string]: string };
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
+  const [coldStart, setColdStart] = React.useState(false);
   const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
@@ -24,12 +26,11 @@ const Home: NextPage = () => {
   });
   //startup the serverless functiono so it doesn't have to wait
   useEffect(() => {
-    const getTiktoks = async (state: string, lim: number) => {
-      const res: Video = (await fetch(`/api/tt/a/0`).then((res) =>
-        res.json()
-      )) as Video;
+    const getTiktoks = async () => {
+      // warm up the serverless function
+      await fetch(`/api/tt/a/0`);
     };
-    void getTiktoks(search, Number(limit));
+    void getTiktoks();
   }, []);
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
@@ -41,10 +42,20 @@ const Home: NextPage = () => {
       // console.log("fetching");
       setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async (state: string, lim: number) => {
-        const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then((res) =>
-          res.json()
-        )) as Video;
-        setVideos(res);
+        const coldStart = setTimeout(() => {
+          setColdStart(true);
+        }, 5000);
+        try {
+          const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
+            (res) => res.json()
+          )) as Video;
+          clearTimeout(coldStart);
+
+          setColdStart(false);
+          setVideos(res);
+        } catch (e) {
+          console.log(e);
+        }
       };
       void getTiktoks(search, Number(limit));
     }, 500);
@@ -116,6 +127,12 @@ const Home: NextPage = () => {
                 />
               </div>
             </div>
+            {coldStart && (
+              <h2 className="mb-4 text-center text-xl font-bold text-white">
+                This is taking a while, please wait a minute for the server to
+                start up
+              </h2>
+            )}
             <div className="flex w-full">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
                 {items.length > 0 && items[0] && items[0].file !== ""
