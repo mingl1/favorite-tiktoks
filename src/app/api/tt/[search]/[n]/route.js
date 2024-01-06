@@ -34,7 +34,18 @@ export async function GET(_request, { params }) {
   const x = Uint8Array.from(response.Body);
   const string = new TextDecoder().decode(x);
   const b = JSON.parse(string);
-  return NextResponse.json(JSON.parse(b));
+  try {
+    const v = JSON.parse(b)
+    return NextResponse.json(v)
+  }
+  catch (error){
+    const response2 = await client.send(command);
+    const x2 = Uint8Array.from(response.Body);
+    const string2 = new TextDecoder().decode(x2);
+    const b2 = JSON.parse(string2);
+    return NextResponse.json(JSON.parse(b2));
+  }
+  
   // } catch (err) {
   //   return new NextResponse(err);
   // }
