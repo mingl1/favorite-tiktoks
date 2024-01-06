@@ -4,9 +4,12 @@ import {
   SageMakerRuntimeClient,
   InvokeEndpointCommand,
 } from "@aws-sdk/client-sagemaker-runtime";
+import retry from "async/retry";
+
 /**
  * @param {any} _request
  * @param {{ params: { search: string, n:number } }} param1
+ * @returns {Promise<NextResponse>}
  */
 
 export async function GET(_request, { params }) {
@@ -39,10 +42,11 @@ export async function GET(_request, { params }) {
       const v = JSON.parse(b);
       return NextResponse.json(v);
     })
-    .catch((err) => {
+    .catch(async (err) => {
       console.log(err);
-      const x = Uint8Array.from(err.Body);
-      return new NextResponse(x);
+      // const x = Uint8Array.from(err.Body);
+      if (n > 0) return await GET(_request, { params });
+      else return NextResponse.json(err);
     });
 
   return response;
