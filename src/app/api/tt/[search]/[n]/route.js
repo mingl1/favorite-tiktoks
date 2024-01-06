@@ -30,21 +30,27 @@ export async function GET(_request, { params }) {
     // EnableExplanations: "STRING_VALUE",
   };
   const command = new InvokeEndpointCommand(input);
-  const response = await client.send(command);
-  const x = Uint8Array.from(response.Body);
-  const string = new TextDecoder().decode(x);
-  const b = JSON.parse(string);
-  try {
+  const response = await client.send(command).then((res)=>{
+    const x = Uint8Array.from(res.Body);
+    var string = new TextDecoder().decode(x);
+    const b = JSON.parse(string);
     const v = JSON.parse(b)
-    return NextResponse.json(v)
-  }
-  catch (error){
-    const response2 = await client.send(command);
-    const x2 = Uint8Array.from(response.Body);
-    const string2 = new TextDecoder().decode(x2);
-    const b2 = JSON.parse(string2);
-    return NextResponse.json(JSON.parse(b2));
-  }
+    return NextResponse.json(v);
+  }).catch((err)=> new NextResponse(err.Body))
+  
+  return response
+  
+  // while (string.startsWith
+  // try {
+    
+  // }
+  // catch (error){
+  //   const response2 = await client.send(command);
+  //   const x2 = Uint8Array.from(response.Body);
+  //   const string2 = new TextDecoder().decode(x2);
+  //   const b2 = JSON.parse(string2);
+  //   return NextResponse.json(JSON.parse(b2));
+  // }
   
   // } catch (err) {
   //   return new NextResponse(err);
