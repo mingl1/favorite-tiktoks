@@ -32,23 +32,21 @@ export async function GET(_request, { params }) {
     // EnableExplanations: "STRING_VALUE",
   };
   const command = new InvokeEndpointCommand(input);
-  const response = await client
-    .send(command)
-    .then((res) => {
-      console.log("found result");
-      const x = Uint8Array.from(res.Body);
-      var string = new TextDecoder().decode(x);
-      const b = JSON.parse(string);
-      const v = JSON.parse(b);
-      return NextResponse.json(v);
-    })
-    .catch(async (err) => {
-      console.log("did not find result");
-      console.log(err);
-      // const x = Uint8Array.from(err.Body);
-      if (Number(n) > 0) return await GET(_request, { params });
-      else return NextResponse.json({ error: "please refresh and try again" });
-    });
+  const response = await client.send(command).then((res) => {
+    console.log("found result");
+    const x = Uint8Array.from(res.Body);
+    var string = new TextDecoder().decode(x);
+    const b = JSON.parse(string);
+    const v = JSON.parse(b);
+    return NextResponse.json(v);
+  });
+  // .catch(async (err) => {
+  //   console.log("did not find result");
+  //   console.log(err);
+  //   // const x = Uint8Array.from(err.Body);
+  //   if (Number(n) > 0) return await GET(_request, { params });
+  //   else return NextResponse.json({ error: "please try again" });
+  // });
 
   return response;
 

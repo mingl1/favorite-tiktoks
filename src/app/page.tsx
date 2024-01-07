@@ -34,7 +34,13 @@ const Home: NextPage = () => {
   useEffect(() => {
     const getTiktoks = async () => {
       // warm up the serverless function
-      await fetch(`/api/tt/a/0`);
+      const coldStart = setTimeout(() => {
+        setColdStart(true);
+      }, 1000);
+      await fetch(`/api/tt/coldStart`).then((_) => {
+        setColdStart(false);
+        clearTimeout(coldStart);
+      });
     };
     void getTiktoks();
   }, []);
@@ -43,19 +49,15 @@ const Home: NextPage = () => {
   >([]);
   useEffect(() => {
     if (timer) clearTimeout(timer);
-    if (search === "" || !submit) return;
+    if (coldStart || search === "" || !submit) return;
     timer = setTimeout(() => {
       // console.log("fetching");
       setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async (state: string, lim: number) => {
-        const coldStart = setTimeout(() => {
-          setColdStart(true);
-        }, 5000);
         try {
           const res: Video | err = (await fetch(`/api/tt/${state}/${lim}`).then(
             (res) => res.json()
           )) as Video | err;
-          clearTimeout(coldStart);
 
           setColdStart(false);
           if (!("error" in res)) setVideos(res);
@@ -74,7 +76,7 @@ const Home: NextPage = () => {
       void getTiktoks(search, Number(limit));
     }, 500);
     return () => clearTimeout(timer);
-  }, [search, limit, submit]);
+  }, [search, limit, submit, coldStart]);
   useEffect(() => {
     if (Object.keys(videos.id).length == 0) {
       return;
