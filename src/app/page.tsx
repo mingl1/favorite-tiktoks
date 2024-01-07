@@ -37,7 +37,7 @@ const Home: NextPage = () => {
       const coldStart = setTimeout(() => {
         setColdStart(true);
       }, 1000);
-      await fetch(`/api/tt/coldStart`).then((_) => {
+      await fetch(`/api/coldStart`).then((_) => {
         setColdStart(false);
         clearTimeout(coldStart);
       });
