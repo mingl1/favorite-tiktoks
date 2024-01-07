@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       // warm up the serverless function
       const coldStart = setTimeout(() => {
         setColdStart(true);
-      }, 1000);
+      }, 500);
       await fetch(`/api/coldStart`).then((_) => {
         console.log("warmed up");
         setColdStart(false);
@@ -69,6 +69,8 @@ const Home: NextPage = () => {
           }
         } catch (e) {
           console.log(e);
+          setColdStart(true);
+          setVideos({ title: {}, id: {}, text: {} });
           setError(
             "Something went wrong, please refresh the page and try again"
           );
