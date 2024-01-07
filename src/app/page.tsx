@@ -13,12 +13,18 @@ type Video = {
   title: { [key: string]: string };
   text: { [key: string]: string };
 };
+type err = {
+  error: string;
+};
 let timer: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
   const [coldStart, setColdStart] = React.useState(false);
+  const [error, setError] = React.useState(
+    "This is taking a while, please wait a minute for the server to start up"
+  );
   const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
@@ -46,15 +52,22 @@ const Home: NextPage = () => {
           setColdStart(true);
         }, 5000);
         try {
-          const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
+          const res: Video | err = (await fetch(`/api/tt/${state}/${lim}`).then(
             (res) => res.json()
-          )) as Video;
+          )) as Video | err;
           clearTimeout(coldStart);
 
           setColdStart(false);
-          setVideos(res);
+          if (!("error" in res)) setVideos(res);
+          else {
+            // console.log(res.error);
+            setColdStart(true);
+            setError(res.error);
+          }
         } catch (e) {
-          console.log(e);
+          setError(
+            "Something went wrong, please refresh the page and try again"
+          );
         }
       };
       void getTiktoks(search, Number(limit));
@@ -129,8 +142,7 @@ const Home: NextPage = () => {
             </div>
             {coldStart && (
               <h2 className="mb-4 text-center text-xl font-bold text-white">
-                This is taking a while, please wait a minute for the server to
-                start up
+                {error}
               </h2>
             )}
             <div className="flex w-full">
