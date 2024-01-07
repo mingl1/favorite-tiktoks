@@ -47,7 +47,7 @@ export async function GET(_request, { params }) {
       console.log(err);
       // const x = Uint8Array.from(err.Body);
       if (Number(n) > 0) return await GET(_request, { params });
-      else return NextResponse.json({ error: "please try again" });
+      else return NextResponse.json({ error: "please refresh and try again" });
     });
 
   return response;

@@ -60,11 +60,12 @@ const Home: NextPage = () => {
           setColdStart(false);
           if (!("error" in res)) setVideos(res);
           else {
-            // console.log(res.error);
             setColdStart(true);
             setError(res.error);
+            setVideos({ title: {}, id: {}, text: {} });
           }
         } catch (e) {
+          console.log(e);
           setError(
             "Something went wrong, please refresh the page and try again"
           );
