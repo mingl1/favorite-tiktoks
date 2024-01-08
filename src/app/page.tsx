@@ -14,9 +14,7 @@ type Video = {
   title: { [key: string]: string };
   text: { [key: string]: string };
 };
-type err = {
-  error: string;
-};
+
 let timer: NodeJS.Timeout;
 let cs: NodeJS.Timeout;
 let inervalId: NodeJS.Timeout;
@@ -65,7 +63,7 @@ const Home: NextPage = () => {
         console.log(data, executionId);
         if (data.result || data.state === "Canceled") {
           setExecutionId("");
-          setVideos(data);
+          setVideos(data as Video);
         }
       },
     }
@@ -117,7 +115,7 @@ const Home: NextPage = () => {
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
       setVideos({ title: {}, id: {}, text: {} });
-      const getTiktoks = async (state: string, lim: number) => {
+      const getTiktoks = async () => {
         try {
           cs = setTimeout(() => {
             console.log("cold start");
@@ -129,15 +127,6 @@ const Home: NextPage = () => {
             return res.json();
           });
           setExecutionId(id);
-          // const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
-          //   (res) => {
-          //     console.log(res);
-          //     setColdStart(false);
-          //     return res.json();
-          //   }
-          // )) as Video;
-          // // clearTimeout(cs);
-          // setVideos(res);
         } catch (e) {
           console.log(e);
           setColdStart(true);
@@ -147,14 +136,15 @@ const Home: NextPage = () => {
           );
         }
       };
-      void getTiktoks(search, Number(limit));
+      void getTiktoks();
     }, 500);
     return () => clearTimeout(timer);
   }, [search, limit, submit, coldStart]);
   useEffect(() => {
-    if (Object.keys(videos.id).length == 0) {
+    if (Object.keys(videos.id).length === 0) {
       return;
     }
+    console.log(videos);
     const lst = Object.keys(videos.id);
     const items: { file: string; name: string; text: string }[] = [];
 
