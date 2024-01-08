@@ -1,8 +1,9 @@
 import { getExecution } from "@defer/client";
+import { NextResponse } from "next/server";
 /**
  * @param {any} _request
  * @param {{ params: { id: string } }} param1
- * @returns {Promise<Response>}
+ * @returns {Promise<NextResponse>}
  */
 export async function GET(_request, { params }) {
   const { id } = params;
