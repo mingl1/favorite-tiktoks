@@ -63,18 +63,16 @@ const Home: NextPage = () => {
             console.log("cold start");
             setColdStart(true);
           }, 1000);
-          const res: Video | err = (await fetch(`/api/tt/${state}/${lim}`).then(
-            (res) => res.json()
-          )) as Video | err;
-          console.log(res);
+          const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
+            (res) => {
+              console.log(res);
+              setColdStart(false);
+
+              return res.json();
+            }
+          )) as Video;
           clearTimeout(cs);
-          setColdStart(false);
           if (!("error" in res)) setVideos(res);
-          else {
-            setColdStart(true);
-            setError(res.error);
-            setVideos({ title: {}, id: {}, text: {} });
-          }
         } catch (e) {
           console.log(e);
           setColdStart(true);
