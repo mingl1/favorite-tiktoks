@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import coldStart from "../../../defer/coldStart";
+import coldStart from "../defer/coldStart";
 
 /**
  * @param {any} _request
