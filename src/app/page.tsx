@@ -67,53 +67,12 @@ const Home: NextPage = () => {
       },
     }
   );
-  //startup the serverless functiono so it doesn't have to wait
-  // useEffect(() => {
-
-  //   async function getTiktoks() {
-  //     // warm up the serverless function
-
-  //     const x = await fetch(`/api/coldStart`).then((res) => {
-  //       console.log(res);
-
-  //       return res;
-  //     });
-  //     return x;
-  //   }
-  //   void getTiktoks().then((_) => {
-  //     setColdStart(false);
-  //     clearTimeout(cs);
-  //     console.log("warmed up");
-  //   });
-  // }, []);
-  // useEffect(() => {
-  //   if (executionId === "") return;
-  //   const getTiktoks = async (id: string) => {
-  //     try {
-  //       const res: Video = (await fetch(`/api/pull/${id}`).then((res) => {
-  //         console.log(res);
-  //         setColdStart(false);
-  //         return res.json();
-  //       })) as Video;
-  //       // clearTimeout(cs);
-  //       setVideos(res);
-  //     } catch (e) {
-  //       console.log(e);
-  //       setColdStart(true);
-  //       setVideos({ title: {}, id: {}, text: {} });
-  //       setError("Something went wrong, please refresh the page and try again");
-  //     }
-  //   };
-  //   inervalId = setInterval(() => {
-  //     void getTiktoks(executionId);
-  //   }, 1000);
-  // }, [executionId]);
 
   useEffect(() => {
     if (timer) clearTimeout(timer);
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
-      setVideos({ title: {}, id: {}, text: {} });
+      setItems([]);
       const getTiktoks = async () => {
         try {
           cs = setTimeout(() => {
