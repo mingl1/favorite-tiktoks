@@ -7,7 +7,7 @@ import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
 import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 
 type Video = {
   id: { [key: string]: string };
@@ -17,7 +17,6 @@ type Video = {
 
 let timer: NodeJS.Timeout;
 let cs: NodeJS.Timeout;
-let inervalId: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("3");
@@ -120,10 +119,8 @@ const Home: NextPage = () => {
           cs = setTimeout(() => {
             console.log("cold start");
             setColdStart(true);
-          }, 1000);
-
+          }, 3000);
           const id = await fetch(`/api/tt/${search}/${limit}`).then((res) => {
-            console.log(res);
             return res.json();
           });
           setExecutionId(id);
@@ -139,12 +136,12 @@ const Home: NextPage = () => {
       void getTiktoks();
     }, 500);
     return () => clearTimeout(timer);
-  }, [search, limit, submit, coldStart]);
+  }, [search, limit, submit]);
   useEffect(() => {
     if (Object.keys(videos.id).length === 0) {
       return;
     }
-    console.log(videos);
+    clearTimeout(cs);
     const lst = Object.keys(videos.id);
     const items: { file: string; name: string; text: string }[] = [];
 
@@ -162,7 +159,6 @@ const Home: NextPage = () => {
             : (videos.text[element] as string),
       });
     });
-    console.log(items, "items");
     setItems(items);
     setColdStart(false);
   }, [videos]);
