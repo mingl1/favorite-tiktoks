@@ -30,38 +30,39 @@ const Home: NextPage = () => {
     text: {},
   });
   //startup the serverless functiono so it doesn't have to wait
-  useEffect(() => {
-    const cs = setTimeout(() => {
-      console.log("cold start");
-      setColdStart(true);
-    }, 500);
-    async function getTiktoks() {
-      // warm up the serverless function
+  // useEffect(() => {
 
-      const x = await fetch(`/api/coldStart/start`).then((res) => {
-        console.log(res);
+  //   async function getTiktoks() {
+  //     // warm up the serverless function
 
-        return res;
-      });
-      return x;
-    }
-    void getTiktoks().then((_) => {
-      setColdStart(false);
-      clearTimeout(cs);
-      console.log("warmed up");
-    });
-  }, []);
+  //     const x = await fetch(`/api/coldStart`).then((res) => {
+  //       console.log(res);
+
+  //       return res;
+  //     });
+  //     return x;
+  //   }
+  //   void getTiktoks().then((_) => {
+  //     setColdStart(false);
+  //     clearTimeout(cs);
+  //     console.log("warmed up");
+  //   });
+  // }, []);
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
   >([]);
   useEffect(() => {
     if (timer) clearTimeout(timer);
-    if (coldStart || search === "" || !submit) return;
+    if (search === "" || !submit) return;
     timer = setTimeout(() => {
       // console.log("fetching");
       setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async (state: string, lim: number) => {
         try {
+          const cs = setTimeout(() => {
+            console.log("cold start");
+            setColdStart(true);
+          }, 1000);
           const res: Video | err = (await fetch(`/api/tt/${state}/${lim}`).then(
             (res) => res.json()
           )) as Video | err;

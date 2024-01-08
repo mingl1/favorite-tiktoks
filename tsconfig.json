@@ -41,7 +41,7 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-, "src/app/api/tt/[search]/[n]/route.js"  ,"src/app/api/coldStart/start.ts" ],
+, "src/app/api/tt/[search]/[n]/route.js"  ,"src/app/api/coldStart/route.ts" ],
   "exclude": [
     "node_modules"
   ]
