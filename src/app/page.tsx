@@ -113,13 +113,13 @@ const Home: NextPage = () => {
     if (timer) clearTimeout(timer);
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
-      // setVideos({ title: {}, id: {}, text: {} });
+      setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async () => {
         try {
           cs = setTimeout(() => {
             console.log("cold start");
             setColdStart(true);
-          }, 3000);
+          }, 5000);
           const id = await fetch(`/api/tt/${search}/${limit}`).then((res) => {
             return res.json();
           });
