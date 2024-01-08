@@ -120,6 +120,7 @@ const Home: NextPage = () => {
     });
     setItems(items);
     setColdStart(false);
+    setSubmit(false);
   }, [videos]);
 
   return (
