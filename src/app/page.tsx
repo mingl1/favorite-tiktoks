@@ -114,7 +114,7 @@ const Home: NextPage = () => {
     if (timer) clearTimeout(timer);
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
-      setVideos({ title: {}, id: {}, text: {} });
+      // setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async () => {
         try {
           cs = setTimeout(() => {
@@ -162,6 +162,7 @@ const Home: NextPage = () => {
             : (videos.text[element] as string),
       });
     });
+    console.log(items, "items");
     setItems(items);
   }, [videos]);
 
