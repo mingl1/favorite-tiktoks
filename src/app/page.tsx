@@ -7,6 +7,7 @@ import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
 import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useMutation, useQuery } from "react-query";
 type Video = {
   id: { [key: string]: string };
   title: { [key: string]: string };
@@ -16,19 +17,56 @@ type err = {
   error: string;
 };
 let timer: NodeJS.Timeout;
+let cs: NodeJS.Timeout;
+let inervalId: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
   const [coldStart, setColdStart] = React.useState(false);
+  const [executionId, setExecutionId] = React.useState("");
   const [error, setError] = React.useState(
     "Please wait a minute for the server to start up and resubmit your search"
   );
+  const [items, setItems] = React.useState<
+    { file: string; name: string; text: string }[]
+  >([]);
   const [videos, setVideos] = React.useState<Video>({
     title: {},
     id: {},
     text: {},
   });
+
+  // const { mutate } = useMutation(
+  //   async () => {
+  //     return
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data);
+  //       setExecutionId(data);
+  //     },
+  //     onError: (error) => {
+  //       console.log(error);
+  //     },
+  //   }
+  // );
+
+  useQuery(
+    "getTiktoks",
+    async () => {
+      return await fetch(`/api/pull/${executionId}`).then((res) => res.json());
+    },
+    {
+      enabled: !!executionId,
+      refetchInterval: 1000,
+      onSuccess: (data) => {
+        console.log(data, executionId);
+        if (data.result || data.state === "Canceled") setExecutionId("");
+        setVideos(data);
+      },
+    }
+  );
   //startup the serverless functiono so it doesn't have to wait
   // useEffect(() => {
 
@@ -48,31 +86,55 @@ const Home: NextPage = () => {
   //     console.log("warmed up");
   //   });
   // }, []);
-  const [items, setItems] = React.useState<
-    { file: string; name: string; text: string }[]
-  >([]);
+  // useEffect(() => {
+  //   if (executionId === "") return;
+  //   const getTiktoks = async (id: string) => {
+  //     try {
+  //       const res: Video = (await fetch(`/api/pull/${id}`).then((res) => {
+  //         console.log(res);
+  //         setColdStart(false);
+  //         return res.json();
+  //       })) as Video;
+  //       // clearTimeout(cs);
+  //       setVideos(res);
+  //     } catch (e) {
+  //       console.log(e);
+  //       setColdStart(true);
+  //       setVideos({ title: {}, id: {}, text: {} });
+  //       setError("Something went wrong, please refresh the page and try again");
+  //     }
+  //   };
+  //   inervalId = setInterval(() => {
+  //     void getTiktoks(executionId);
+  //   }, 1000);
+  // }, [executionId]);
+
   useEffect(() => {
     if (timer) clearTimeout(timer);
     if (search === "" || !submit) return;
     timer = setTimeout(() => {
-      // console.log("fetching");
       setVideos({ title: {}, id: {}, text: {} });
       const getTiktoks = async (state: string, lim: number) => {
         try {
-          const cs = setTimeout(() => {
+          cs = setTimeout(() => {
             console.log("cold start");
             setColdStart(true);
           }, 1000);
-          const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
-            (res) => {
-              console.log(res);
-              setColdStart(false);
 
-              return res.json();
-            }
-          )) as Video;
-          clearTimeout(cs);
-          if (!("error" in res)) setVideos(res);
+          const id = await fetch(`/api/tt/${search}/${limit}`).then((res) => {
+            console.log(res);
+            return res.json();
+          });
+          setExecutionId(id);
+          // const res: Video = (await fetch(`/api/tt/${state}/${lim}`).then(
+          //   (res) => {
+          //     console.log(res);
+          //     setColdStart(false);
+          //     return res.json();
+          //   }
+          // )) as Video;
+          // // clearTimeout(cs);
+          // setVideos(res);
         } catch (e) {
           console.log(e);
           setColdStart(true);
@@ -132,8 +194,10 @@ const Home: NextPage = () => {
                 <Search
                   label="Search"
                   onSubmit={(e) => {
-                    setSubmit((e) => true);
+                    setSubmit((_) => true);
                     setSearch(e);
+                    // handleSubmit();
+                    // mutate();
                   }}
                   state={search}
                   setState={setSearch}
@@ -142,9 +206,10 @@ const Home: NextPage = () => {
               <div className="float-left max-w-[35vw] flex-1 md:w-24 md:flex-none">
                 <Search
                   label="Limit"
-                  onSubmit={(e) => {
-                    setSubmit((e) => true);
+                  onSubmit={(_) => {
+                    setSubmit((_) => true);
                     setItems([{ file: "", name: "", text: "" }]);
+                    // handleSubmit();
                   }}
                   defaultValue="3"
                   state={limit.toString()}

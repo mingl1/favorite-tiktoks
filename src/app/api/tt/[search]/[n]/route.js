@@ -1,6 +1,6 @@
 // import axios from "axios";
 import { NextResponse } from "next/server";
-import { getExecution } from "@defer/client";
+// import { getExecution } from "@defer/client";
 // import {
 //   SageMakerRuntimeClient,
 //   InvokeEndpointCommand,
@@ -15,9 +15,8 @@ import find from "../../../../defer/search.js";
 export async function GET(_request, { params }) {
   const { search, n } = params;
   const id = await find(search, n).then((res) => res.id);
-  const ret = await getExecution(id);
 
-  return NextResponse.json(ret);
+  return NextResponse.json(id);
   // const client = new SageMakerRuntimeClient({ region: "us-east-1" });
   // let a = {
   //   inputs: search,
