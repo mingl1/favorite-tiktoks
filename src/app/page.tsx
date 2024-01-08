@@ -63,7 +63,7 @@ const Home: NextPage = () => {
         console.log(data, executionId);
         if (data.result || data.state === "Canceled") {
           setExecutionId("");
-          setVideos(data as Video);
+          setVideos(data.result as Video);
         }
       },
     }
