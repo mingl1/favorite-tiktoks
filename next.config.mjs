@@ -4,7 +4,7 @@
  */
 await import("./src/env.mjs");
 
-/** @type {import("next").NextConfig} */
+/** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: false,
   experimental: {
