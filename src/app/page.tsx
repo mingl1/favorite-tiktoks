@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   const [submit, setSubmit] = React.useState(false);
   const [coldStart, setColdStart] = React.useState(false);
   const [error, setError] = React.useState(
-    "This is taking a while, please wait a minute for the server to start up"
+    "Please wait a minute for the server to start up and resubmit your search"
   );
   const [videos, setVideos] = React.useState<Video>({
     title: {},
@@ -34,6 +34,7 @@ const Home: NextPage = () => {
     const getTiktoks = async () => {
       // warm up the serverless function
       const coldStart = setTimeout(() => {
+        console.log("cold start");
         setColdStart(true);
       }, 500);
       await fetch(`/api/coldStart`).then((_) => {

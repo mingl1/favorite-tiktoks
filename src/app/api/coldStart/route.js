@@ -7,7 +7,8 @@ import coldStart from "../../defer/coldStart";
  * @returns {Promise<NextResponse>}
  */
 export async function GET(_request) {
-  await coldStart();
-  return NextResponse.json({ coldStart: "done" });
+  return await coldStart().then((_) => {
+    return NextResponse.json({ coldStart: "done" });
+  });
 }
 export const dynamic = "force-dynamic";
