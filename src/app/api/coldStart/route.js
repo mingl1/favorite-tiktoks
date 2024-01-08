@@ -10,4 +10,4 @@ export async function GET(_request) {
   await coldStart();
   return NextResponse.json({ coldStart: "done" });
 }
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
