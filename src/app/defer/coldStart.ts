@@ -4,13 +4,14 @@ import {
   InvokeEndpointCommand,
   // type InvokeEndpointAsyncCommandOutput,
 } from "@aws-sdk/client-sagemaker-runtime";
+import { NextResponse } from "next/server";
 // import { NextResponse } from "next/server";
 
-async function longRunning(): Promise<string> {
+async function longRunning(): Promise<NextResponse> {
   const client = new SageMakerRuntimeClient({ region: "us-east-1" });
   const a = {
     inputs: "coldStart",
-    n: 1,
+    n: 3,
   };
   const input = {
     // InvokeEndpointInput
@@ -26,10 +27,13 @@ async function longRunning(): Promise<string> {
     // EnableExplanations: "STRING_VALUE",
   };
   const command = new InvokeEndpointCommand(input);
-  return await client.send(command).then((_) => {
-    console.log("found result");
-
-    return "done";
+  return await client.send(command).then((res) => {
+    const x = Uint8Array.from(res.Body);
+    var string = new TextDecoder().decode(x);
+    const b = JSON.parse(string);
+    const v = JSON.parse(b);
+    console.log(v);
+    return NextResponse.json(v);
   });
 }
 
