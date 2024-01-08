@@ -62,8 +62,10 @@ const Home: NextPage = () => {
       refetchInterval: 1000,
       onSuccess: (data) => {
         console.log(data, executionId);
-        if (data.result || data.state === "Canceled") setExecutionId("");
-        setVideos(data);
+        if (data.result || data.state === "Canceled") {
+          setExecutionId("");
+          setVideos(data);
+        }
       },
     }
   );
