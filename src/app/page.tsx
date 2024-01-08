@@ -66,7 +66,8 @@ const Home: NextPage = () => {
           const res: Video | err = (await fetch(`/api/tt/${state}/${lim}`).then(
             (res) => res.json()
           )) as Video | err;
-
+          console.log(res);
+          clearTimeout(cs);
           setColdStart(false);
           if (!("error" in res)) setVideos(res);
           else {
@@ -160,7 +161,10 @@ const Home: NextPage = () => {
             )}
             <div className="flex w-full">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
-                {items.length > 0 && items[0] && items[0].file !== ""
+                {!coldStart &&
+                items.length > 0 &&
+                items[0] &&
+                items[0].file !== ""
                   ? items.map((item) => (
                       <div
                         key={item.file}
