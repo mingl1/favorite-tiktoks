@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         console.log("cold start");
         setColdStart(true);
       }, 500);
-      await fetch(`/api/coldStart`).then((res) => {
+      await fetch(`/api/coldStart/start`).then((res) => {
         console.log("warmed up");
         console.log(res);
         setColdStart(false);
