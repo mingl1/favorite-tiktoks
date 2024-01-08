@@ -1,3 +1,5 @@
+"use client";
+
 import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";

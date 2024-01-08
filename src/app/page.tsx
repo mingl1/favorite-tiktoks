@@ -8,6 +8,7 @@ import ReactPlayer from "react-player";
 import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMutation, useQuery } from "react-query";
+
 type Video = {
   id: { [key: string]: string };
   title: { [key: string]: string };
