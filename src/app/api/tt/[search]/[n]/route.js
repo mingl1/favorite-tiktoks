@@ -66,4 +66,4 @@ export async function GET(_request, { params }) {
   //   return new NextResponse(err);
   // }
 }
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
