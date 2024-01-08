@@ -57,7 +57,7 @@ const Home: NextPage = () => {
     },
     {
       enabled: !!executionId,
-      refetchInterval: 1000,
+      refetchInterval: 500,
       onSuccess: (data) => {
         console.log(data, executionId);
         if (data.result || data.state === "Canceled") {
