@@ -24,7 +24,7 @@ const Home: NextPage = () => {
   const [coldStart, setColdStart] = React.useState(false);
   const [executionId, setExecutionId] = React.useState("");
   const [error, setError] = React.useState(
-    "Please wait a minute for the server to start up and resubmit your search"
+    "Please wait a minute for the server to start up"
   );
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
