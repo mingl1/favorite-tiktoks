@@ -31,20 +31,25 @@ const Home: NextPage = () => {
   });
   //startup the serverless functiono so it doesn't have to wait
   useEffect(() => {
-    const getTiktoks = async () => {
+    const cs = setTimeout(() => {
+      console.log("cold start");
+      setColdStart(true);
+    }, 500);
+    async function getTiktoks() {
       // warm up the serverless function
-      const coldStart = setTimeout(() => {
-        console.log("cold start");
-        setColdStart(true);
-      }, 500);
-      await fetch(`/api/coldStart/start`).then((res) => {
-        console.log("warmed up");
+
+      const x = await fetch(`/api/coldStart/start`).then((res) => {
         console.log(res);
-        setColdStart(false);
-        clearTimeout(coldStart);
+
+        return res;
       });
-    };
-    void getTiktoks();
+      return x;
+    }
+    void getTiktoks().then((_) => {
+      setColdStart(false);
+      clearTimeout(cs);
+      console.log("warmed up");
+    });
   }, []);
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
