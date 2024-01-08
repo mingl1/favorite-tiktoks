@@ -164,6 +164,7 @@ const Home: NextPage = () => {
     });
     console.log(items, "items");
     setItems(items);
+    setColdStart(false);
   }, [videos]);
 
   return (
@@ -218,10 +219,7 @@ const Home: NextPage = () => {
             )}
             <div className="flex w-full">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 md:gap-16">
-                {!coldStart &&
-                items.length > 0 &&
-                items[0] &&
-                items[0].file !== ""
+                {items.length > 0 && items[0] && items[0].file !== ""
                   ? items.map((item) => (
                       <div
                         key={item.file}
