@@ -7,7 +7,6 @@ import { SSRProvider } from "react-aria";
 import ReactPlayer from "react-player";
 import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { set } from "zod";
 type Video = {
   id: { [key: string]: string };
   title: { [key: string]: string };
