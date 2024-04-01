@@ -14,9 +14,12 @@ import find from "../../../../defer/search.js";
 
 export async function GET(_request, { params }) {
   const { search, n } = params;
-  const id = await find(search, n).then((res) => res.id);
+  // const id = await find(search, n).then((res) => res.id);
+  const videos = await fetch(
+    "https://mingl1.pythonanywhere.com/search?search=" + search + "&n=" + n
+  ).then((res) => res.json());
 
-  return NextResponse.json(id);
+  return NextResponse.json(videos);
   // const client = new SageMakerRuntimeClient({ region: "us-east-1" });
   // let a = {
   //   inputs: search,
