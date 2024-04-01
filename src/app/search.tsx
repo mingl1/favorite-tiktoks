@@ -8,8 +8,6 @@ interface myProps extends AriaSearchFieldProps {
 }
 export default function SearchField(props: myProps) {
   const { label, defaultValue, state, setState } = props;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  // const [state, setState] = React.useState("");
   const ref = React.useRef(null);
 
   const { labelProps, inputProps } = useSearchField(

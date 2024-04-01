@@ -9,11 +9,11 @@ import getSkeletons from "./skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useQuery } from "react-query";
 
-type Video = {
-  id: { [key: string]: string };
-  title: { [key: string]: string };
-  text: { [key: string]: string };
-};
+// type Video = {
+//   id: { [key: string]: string };
+//   title: { [key: string]: string };
+//   text: { [key: string]: string };
+// };
 type Response = {
   id: string;
   metadata: {
@@ -21,41 +21,16 @@ type Response = {
     // text: string;
   };
 };
-let timer: NodeJS.Timeout;
-let cs: NodeJS.Timeout;
+// let timer: NodeJS.Timeout;
+// let cs: NodeJS.Timeout;
 const Home: NextPage = () => {
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
-  // const [coldStart, setColdStart] = React.useState(false);
-  // const [executionId, setExecutionId] = React.useState("");
-  // const [error, setError] = React.useState(
-  //   "Please wait a minute for the server to start up"
-  // );
+
   const [items, setItems] = React.useState<
     { file: string; name: string; text: string }[]
   >([]);
-  // const [videos, setVideos] = React.useState<Video>({
-  //   title: {},
-  //   id: {},
-  //   text: {},
-  // });
-
-  // const { mutate } = useMutation(
-  //   async () => {
-  //     return
-  //   },
-  //   {
-  //     onSuccess: (data) => {
-  //       console.log(data);
-  //       setExecutionId(data);
-  //     },
-  //     onError: (error) => {
-  //       console.log(error);
-  //     },
-  //   }
-  // );
-
   useQuery(
     "getTiktoks",
     async () => {
@@ -68,9 +43,6 @@ const Home: NextPage = () => {
       enabled: !!submit && search !== "" && limit !== "0",
       // refetchInterval: 500,
       onSuccess: (data: Array<Response>) => {
-        // console.log(data, executionId);
-        // if (data. || data.state === "Canceled") {
-        // setExecutionId("");
         console.log("DATA IN QUERY:", data);
         let vids = data.map((item) => {
           return {
@@ -80,70 +52,10 @@ const Home: NextPage = () => {
           };
         });
         setSubmit(false);
-
-        // setVideos(vid);
         setItems(vids);
-        // }
       },
     }
   );
-
-  // useEffect(() => {
-  //   if (timer) clearTimeout(timer);
-  //   if (search === "" || !submit) return;
-  //   timer = setTimeout(() => {
-  //     setItems([]);
-  //     const getTiktoks = async () => {
-  //       try {
-  //         cs = setTimeout(() => {
-  //           console.log("cold start");
-  //           setColdStart(true);
-  //         }, 5000);
-  //         const id = await fetch(`/api/tt/${search}/${limit}`).then((res) => {
-  //           return res.json();
-  //         });
-  //         setExecutionId(id);
-  //       } catch (e) {
-  //         console.log(e);
-  //         setColdStart(true);
-  //         setVideos({ title: {}, id: {}, text: {} });
-  //         setError(
-  //           "Something went wrong, please refresh the page and try again"
-  //         );
-  //       }
-  //     };
-  //     void getTiktoks();
-  //   }, 500);
-  //   return () => clearTimeout(timer);
-  // }, [search, limit, submit]);
-  // useEffect(() => {
-  //   if (Object.keys(videos.id).length === 0) {
-  //     return;
-  //   }
-  //   clearTimeout(cs);
-  //   const lst = Object.keys(videos.id);
-  //   const items: { file: string; name: string; text: string }[] = [];
-
-  //   lst.forEach((element: string) => {
-  //     if (element === "undefined") return;
-  //     items.push({
-  //       file: videos.id[element]?.replace(".json", ".mp4") as string,
-  //       name: videos.title[element] as string,
-  //       text: "",
-  //       // TODO: fix this after updating the records
-  //       // text:
-  //       //   (videos.text[element]?.indexOf("#") as number) > -1
-  //       //     ? (videos.text[element]?.slice(
-  //       //         0,
-  //       //         videos.text[element]?.indexOf("#")
-  //       //       ) as string)
-  //       //     : (videos.text[element] as string),
-  //     });
-  //   });
-  //   setItems(items);
-  //   setColdStart(false);
-  //   setSubmit(false);
-  // }, [videos]);
 
   return (
     <SSRProvider>
