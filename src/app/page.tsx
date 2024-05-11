@@ -21,6 +21,12 @@ type Response = {
     // text: string;
   };
 };
+type Item = {
+  file: string;
+  name: string;
+  text: string;
+  id?: string;
+};
 // let timer: NodeJS.Timeout;
 // let cs: NodeJS.Timeout;
 const Home: NextPage = () => {
@@ -28,9 +34,7 @@ const Home: NextPage = () => {
   const [limit, setLimit] = React.useState("3");
   const [submit, setSubmit] = React.useState(false);
 
-  const [items, setItems] = React.useState<
-    { file: string; name: string; text: string }[]
-  >([]);
+  const [items, setItems] = React.useState<Item[]>([]);
   useQuery(
     "getTiktoks",
     async () => {
@@ -49,8 +53,10 @@ const Home: NextPage = () => {
             file: item.id.replace(".json", ".mp4"),
             name: item.metadata.title,
             text: "",
+            id: item.id.split("_")[1]?.replace(".json", ""),
           };
         });
+        console.log(vids);
         setSubmit(false);
         setItems(vids);
       },
@@ -122,6 +128,10 @@ const Home: NextPage = () => {
                               "https://d1eiph32earw5w.cloudfront.net/videos/" +
                               item.file
                             }
+                            // url={
+                            //   "https://www.tiktokv.com/share/video/" + item.id
+                            // }
+                            // https://www.tiktok.com/oembed?url=https://www.tiktokv.com/share/video/6947775210221358342
                             className="react-player"
                             controls={true}
                             width="100%"

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 //   SageMakerRuntimeClient,
 //   InvokeEndpointCommand,
 // } from "@aws-sdk/client-sagemaker-runtime";
-import find from "../../../../defer/search.js";
+// import find from "../../../../defer/search.js";
 /**
  * @param {any} _request
  * @param {{ params: { search: string, n:number } }} param1
