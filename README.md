@@ -581,19 +581,6 @@ df[df['id'].isin(test)][['title','id','text']]
 # Sucess! The queries returned from the pinecone index are the ones related to the search term.
 ## You can setup a basic flask server on AWS or cloud service provider of your choice to create your own TikTok Favorites API for website/app.
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
