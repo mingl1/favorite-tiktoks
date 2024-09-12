@@ -13,6 +13,9 @@ from dotenv import load_dotenv
 load_dotenv()
 # create .env file and add OPENAI_API_KEY, it should start with sk-...
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+# Instead of using OpenAI API to create text embeddings, you can also use
+# Open source models such as: https://huggingface.co/Snowflake/snowflake-arctic-embed-s
+# Very easy to import and use using huggingface model API; just change Pinecone vector storage dimensions accordingly
 ```
 
 
